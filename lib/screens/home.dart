@@ -70,6 +70,36 @@ class _MyHomePageState extends State<MyHomePage> {
       body: PagedListView<int, dynamic>(
         pagingController: _pagingController,
         builderDelegate: PagedChildBuilderDelegate<dynamic>(
+          firstPageErrorIndicatorBuilder: (context) => Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: InkWell(
+                child: Text(
+                  "Si è verificato un errore di rete. Tocca per riprovare",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                onTap: () {
+                  _pagingController.retryLastFailedRequest();
+                },
+              ),
+            ),
+          ),
+          newPageErrorIndicatorBuilder: (context) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Center(
+              child: InkWell(
+                child: Text(
+                  "Si è verificato un errore di rete. Tocca per riprovare",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                onTap: () {
+                  _pagingController.retryLastFailedRequest();
+                },
+              ),
+            ),
+          ),
           itemBuilder: (context, post, index) {
             return ListTile(
               title: Text(

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:intl/date_symbol_data_local.dart';
@@ -8,22 +9,23 @@ import 'screens/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Must add this line.
-  await windowManager.ensureInitialized();
 
-  WindowOptions windowOptions = const WindowOptions(
-    size: Size(800, 600),
-    center: true,
-    backgroundColor: Colors.transparent,
-    skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.normal,
-  );
+  if (Platform.isWindows) {
+    await windowManager.ensureInitialized();
 
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.setTitle("Amici Domenicani");
-    await windowManager.show();
-    await windowManager.focus();
-  });
+    WindowOptions windowOptions = const WindowOptions(
+        size: Size(800, 600),
+        center: true,
+        backgroundColor: Colors.transparent,
+        skipTaskbar: false,
+        titleBarStyle: TitleBarStyle.normal,
+        title: 'Amici Domenicani');
+
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
   initializeDateFormatting().then((_) {
     runApp(const MyApp());
   });

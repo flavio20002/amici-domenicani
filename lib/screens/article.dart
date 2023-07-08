@@ -22,6 +22,7 @@ class _ArticlePageState extends State<ArticlePage> {
           padding: const EdgeInsets.all(16.0),
           child: HtmlWidget(
             widget.articleText,
+            textStyle: Theme.of(context).textTheme.bodyLarge,
           ),
         ),
       ),
