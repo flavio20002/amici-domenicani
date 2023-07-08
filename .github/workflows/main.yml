@@ -32,14 +32,19 @@ jobs:
         with:
           format: YYYYMMDD-HH
           utcOffset: "+02:00"
+      - name: run number with offset
+        env:
+          NUM: ${{ github.run_number }}
+        run: |
+          echo "GITHUB_RUN_NUMBER_WITH_OFFSET=$(($NUM + 150))" >> $GITHUB_ENV
       - run: echo "${{ secrets.ENCODED_KEYSTORE }}" | base64 --decode > android/app/key.jks
-      - run: flutter build apk --release --build-name=${{ steps.current-time.outputs.year }}.${{ steps.current-time.outputs.month }}.${{ steps.current-time.outputs.day }} --build-number=${{github.run_number}}
+      - run: flutter build apk --release --build-name=${{ steps.current-time.outputs.year }}.${{ steps.current-time.outputs.month }}.${{ steps.current-time.outputs.day }} --build-number=${{env.GITHUB_RUN_NUMBER_WITH_OFFSET}}
         env:
           SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD}}
           SIGNING_KEY_PATH: key.jks
-      - run: flutter build appbundle --release --build-name=${{ steps.current-time.outputs.year }}.${{ steps.current-time.outputs.month }}.${{ steps.current-time.outputs.day }} --build-number=${{github.run_number}}
+      - run: flutter build appbundle --release --build-name=${{ steps.current-time.outputs.year }}.${{ steps.current-time.outputs.month }}.${{ steps.current-time.outputs.day }} --build-number=${{env.GITHUB_RUN_NUMBER_WITH_OFFSET}}
         env:
           SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
