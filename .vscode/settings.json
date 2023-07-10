@@ -3,5 +3,6 @@
         "scrollbars",
         "trackpad"
     ],
-    "cSpell.language": "en,it"
+    "cSpell.language": "en,it",
+    "editor.formatOnSave": true
 }

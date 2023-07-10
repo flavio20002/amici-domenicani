@@ -1,11 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:html_unescape/html_unescape.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:intl/intl.dart';
 
-import 'article.dart';
+import '../components/post_list.dart';
+import '../my_search_delegate.dart';
+import '../search.dart';
+import '../service.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -19,32 +18,10 @@ class _MyHomePageState extends State<MyHomePage> {
       PagingController(firstPageKey: 1);
   List<dynamic> posts = [];
 
-  Future<void> fetchPosts(int pageKey) async {
-    final url = Uri.parse(
-        'https://www.amicidomenicani.it/wp-json/wp/v2/posts?per_page=10&page=$pageKey');
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final List<dynamic> fetchedPosts = jsonDecode(response.body);
-        final isLastPage = fetchedPosts.length < 10;
-        if (isLastPage) {
-          _pagingController.appendLastPage(fetchedPosts);
-        } else {
-          final nextPageKey = pageKey + 1;
-          _pagingController.appendPage(fetchedPosts, nextPageKey);
-        }
-      } else {
-        throw Exception(response.body);
-      }
-    } catch (error) {
-      _pagingController.error = error;
-    }
-  }
-
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
-      fetchPosts(pageKey);
+      fetchPosts(_pagingController, pageKey);
     });
     super.initState();
   }
@@ -63,6 +40,15 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: const Icon(Icons.refresh),
             onPressed: () {
               refreshPosts();
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              myShowSearch(
+                context: context,
+                delegate: PostSearchDelegate(),
+              );
             },
           ),
         ],
@@ -101,24 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           itemBuilder: (context, post, index) {
-            return ListTile(
-              title: Text(
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                  htmlToPlainText(post['title']['rendered'])),
-              subtitle: Text(
-                formatDate(post['date']),
-              ),
-              onTap: () {
-                final articleText = post['content']['rendered'];
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ArticlePage(articleText: htmlToPlainText(articleText)),
-                  ),
-                );
-              },
-            );
+            return Post(post: post);
           },
         ),
       ),
@@ -130,18 +99,4 @@ class _MyHomePageState extends State<MyHomePage> {
     _pagingController.dispose();
     super.dispose();
   }
-}
-
-String htmlToPlainText(String htmlString) {
-  final unescape = HtmlUnescape();
-  final text = unescape.convert(htmlString);
-  return text;
-}
-
-String formatDate(String dateString) {
-  final inputFormat = DateFormat('yyyy-MM-ddTHH:mm:ss');
-  final outputFormat = DateFormat('d MMMM yyyy', 'it_IT');
-  final date = inputFormat.parse(dateString);
-  final formattedDate = outputFormat.format(date);
-  return formattedDate;
 }
