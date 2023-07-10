@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    namespace "amicidomenicani.flavio.barisi.com.amicidomenicani"
+    namespace "com.example.amici_domenicani"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
