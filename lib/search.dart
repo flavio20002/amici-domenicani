@@ -52,6 +52,7 @@ class PostSearchDelegate extends MySearchDelegate<String> {
       _pagingController.refresh();
     }
     return PagedListView<int, dynamic>(
+      key: const PageStorageKey<String>('searchList'),
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<dynamic>(
         itemBuilder: (context, post, index) {
