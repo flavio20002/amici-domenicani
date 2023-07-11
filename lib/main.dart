@@ -1,11 +1,10 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:amici_domenicani/screens/navigation.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
-
-import 'screens/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,7 +52,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: const NavigationPage(),
     );
   }
 }

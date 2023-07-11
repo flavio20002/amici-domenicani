@@ -2,7 +2,7 @@ import 'package:amici_domenicani/service.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import 'components/post_list.dart';
+import 'components/post.dart';
 import 'my_search_delegate.dart';
 
 class PostSearchDelegate extends MySearchDelegate<String> {

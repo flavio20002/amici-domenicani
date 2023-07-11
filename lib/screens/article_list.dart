@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import '../components/post_list.dart';
+import '../components/post.dart';
 import '../my_search_delegate.dart';
 import '../search.dart';
 import '../service.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class ArticleListPage extends StatefulWidget {
+  const ArticleListPage({super.key, this.categoryId, this.categoryName});
+
+  final int? categoryId;
+  final String? categoryName;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<ArticleListPage> createState() => _ArticleListPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _ArticleListPageState extends State<ArticleListPage> {
   final PagingController<int, dynamic> _pagingController =
       PagingController(firstPageKey: 1);
   List<dynamic> posts = [];
@@ -21,7 +24,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
-      fetchPosts(_pagingController, pageKey);
+      if (widget.categoryId != null) {
+        fetchPostsByCategory(_pagingController, pageKey, widget.categoryId!);
+      } else {
+        fetchPosts(_pagingController, pageKey);
+      }
     });
     super.initState();
   }
@@ -34,7 +41,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Amici Domenicani'),
+        title: Text(widget.categoryName != null
+            ? widget.categoryName!.replaceAll('Un sacerdote risponde - ', '')
+            : 'Articoli'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
