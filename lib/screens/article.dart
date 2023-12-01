@@ -20,9 +20,11 @@ class _ArticlePageState extends State<ArticlePage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: HtmlWidget(
-            widget.articleText,
-            textStyle: Theme.of(context).textTheme.bodyLarge,
+          child: SelectionArea(
+            child: HtmlWidget(
+              widget.articleText,
+              textStyle: Theme.of(context).textTheme.bodyLarge,
+            ),
           ),
         ),
       ),
